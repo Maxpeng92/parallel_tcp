@@ -23,20 +23,20 @@ public class TCPReceiver implements Runnable{
     public TCPReceiver(int port) throws IOException
     {
 	// Init stuff
-	listener = new ServerSocket(port);
+	listener = new ServerSocket(port); // SeverSocket does not define backlog.
 	buffer = new byte[8192];
 	System.out.println(" -- Ready to receive information on port: "+port);
-	s = listener.accept();
+	s = listener.accept(); // No sercurity code to guarantee a safe connection.
 	
 	theInstream = s.getInputStream();
 	theOutstream = s.getOutputStream();
 	length = theInstream.read(buffer);
 	initString = "Recieved-"+new String(buffer, 0, length);
-	StringTokenizer t = new StringTokenizer(initString, "::");
+	StringTokenizer t = new StringTokenizer(initString, "::"); //
 	filename = t.nextToken();
 	bytesToReceive = new Integer(t.nextToken()).intValue();
 	theOutstream.write((new String("GOT_IT")).getBytes());
-	System.out.println("dalian");
+	System.out.println("File received!"); // Log added to indicate the end.
     }
 
     public TCPReceiver(int port, ByteBuffer lb) throws IOException
